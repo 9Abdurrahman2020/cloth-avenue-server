@@ -4,7 +4,7 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 const app = express();
 require("dotenv").config();
 const ObjectId = require("mongodb").ObjectId;
-const port = process.env.port;
+const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 const stripe = require("stripe")(process.env.stripe_secret);
@@ -145,9 +145,9 @@ const mongodbServer = async () => {
 };
 mongodbServer().catch(console.dir);
 
-app.get('/',(req,res)=>{
-  res.json('Cloth avenue server is running')
-})
+app.get("/", (req, res) => {
+  res.json("Cloth avenue server is running");
+});
 app.listen(port, () => {
   console.log("cloth avenue server is running on port:", port);
 });
