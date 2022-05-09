@@ -145,6 +145,9 @@ const mongodbServer = async () => {
 };
 mongodbServer().catch(console.dir);
 
+app.get('/',(req,res)=>{
+  res.json('Cloth avenue server is running')
+})
 app.listen(port, () => {
   console.log("cloth avenue server is running on port:", port);
 });
