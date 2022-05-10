@@ -143,7 +143,7 @@ const mongodbServer = async () => {
   } finally {
   }
 };
-mongodbServer().catch(console.dir);
+mongodbServer().catch((error) => console.dir(error));
 
 app.get("/", (req, res) => {
   res.json("Cloth avenue server is running");
