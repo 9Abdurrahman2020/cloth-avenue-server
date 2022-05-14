@@ -7,9 +7,9 @@ const ObjectId = require("mongodb").ObjectId;
 const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
-const stripe = require("stripe")(process.env.stripe_secret);
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
-const uri = `mongodb+srv://${process.env.db_user}:${process.env.db_pass}@cluster0.y7ez2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y7ez2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -124,26 +124,26 @@ const mongodbServer = async () => {
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.json(result);
     });
-
-    app.post("/create-payment-intent", async (req, res) => {
-      const paymentInfo = req.body;
-      // Create a PaymentIntent with the order amount and currency
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: paymentInfo.product.price * paymentInfo.product.quantity * 100,
-        currency: "usd",
-        automatic_payment_methods: {
-          enabled: true,
-        },
-      });
-
-      res.json({
-        clientSecret: paymentIntent.client_secret,
-      });
-    });
   } finally {
   }
 };
-mongodbServer().catch((error) => console.dir(error));
+mongodbServer().catch(console.dir);
+
+app.post("/create-payment-intent", async (req, res) => {
+  const paymentInfo = req.body;
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: paymentInfo.product.price * paymentInfo.product.quantity * 100,
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.json({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
 
 app.get("/", (req, res) => {
   res.json("Cloth avenue server is running");
